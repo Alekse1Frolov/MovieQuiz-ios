@@ -12,6 +12,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     private var statisticService: StatisticService = StatisticServiceImplementation()
     
+    private var alertPresenter: AlertPresenter?
+    
     private var currentQuestionIndex = 0
     
     private var correctAnswers = 0
@@ -28,7 +30,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        AlertPresenter.showAlertViewController = self
+        alertPresenter = AlertPresenter(viewController: self)
         questionFactory = QuestionFactory(delegate: self)
         questionFactory?.requestNextQuestion()
     }
@@ -95,15 +97,19 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         if currentQuestionIndex == questionsAmount - 1 {
             statisticService.store(correct: correctAnswers, total: questionsAmount)
             let text = correctAnswers == questionsAmount ?
-                    "Поздравляем, вы ответили на 10 из 10!" :
+            "Поздравляем, вы ответили на 10 из 10!" :
             "Ваш результат: \(correctAnswers)/10"
             let alertModel = AlertModel(
                 title: "Этот раунд окончен!",
-                message: "\(text) \nКоличество сыгранных квизов: \(statisticService.gamesCount)\nРекорд: \(statisticService.bestGame.correct)/10 (\(statisticService.bestGame.date.dateTimeString))\nСредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%",
+                message: """
+                    \(text) \nКоличество сыгранных квизов: \(statisticService.gamesCount)
+                    Рекорд: \(statisticService.bestGame.correct)/10 (\(statisticService.bestGame.date.dateTimeString))
+                    Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
+                    """,
                 buttonText: "Сыграть ещё раз") { [weak self] in
                     self?.restartQuiz()
                 }
-            AlertPresenter.showAlert(model: alertModel)
+            alertPresenter?.showAlert(model: alertModel)
         } else {
             currentQuestionIndex += 1
             questionFactory?.requestNextQuestion.self()
