@@ -12,7 +12,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     private var statisticService: StatisticService = StatisticServiceImplementation()
     
-    private var alertPresenter: AlertPresenter?
+    private lazy var alertPresenter = AlertPresenter(viewController: self)
     
     private var currentQuestionIndex = 0
     
@@ -30,7 +30,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        alertPresenter = AlertPresenter(viewController: self)
         questionFactory = QuestionFactory(delegate: self)
         questionFactory?.requestNextQuestion()
     }
@@ -102,14 +101,15 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             let alertModel = AlertModel(
                 title: "Этот раунд окончен!",
                 message: """
-                    \(text) \nКоличество сыгранных квизов: \(statisticService.gamesCount)
+                    \(text)
+                    Количество сыгранных квизов: \(statisticService.gamesCount)
                     Рекорд: \(statisticService.bestGame.correct)/10 (\(statisticService.bestGame.date.dateTimeString))
                     Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
                     """,
                 buttonText: "Сыграть ещё раз") { [weak self] in
                     self?.restartQuiz()
                 }
-            alertPresenter?.showAlert(model: alertModel)
+            alertPresenter.showAlert(model: alertModel)
         } else {
             currentQuestionIndex += 1
             questionFactory?.requestNextQuestion.self()
