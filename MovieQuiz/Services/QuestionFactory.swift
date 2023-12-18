@@ -7,7 +7,7 @@
 
 import Foundation
 
-class QuestionFactory: QuestionFactoryProtocol {
+final class QuestionFactory: QuestionFactoryProtocol {
     
     weak var delegate: QuestionFactoryDelegate?
     
@@ -65,5 +65,5 @@ class QuestionFactory: QuestionFactoryProtocol {
     
     init(delegate: QuestionFactoryDelegate?) {
         self.delegate = delegate
-        }
+    }
 }
