@@ -102,10 +102,15 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="hkr-qE-Ruo">
+                                <rect key="frame" x="197" y="438" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
+                            <constraint firstItem="hkr-qE-Ruo" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Gif-hs-2LH"/>
+                            <constraint firstItem="hkr-qE-Ruo" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="KtS-g9-PRQ"/>
                             <constraint firstItem="WYl-vn-Aqy" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="RO7-pg-DwE"/>
                             <constraint firstItem="WYl-vn-Aqy" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="ZbG-gp-CBB"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="WYl-vn-Aqy" secondAttribute="bottom" id="fkC-eR-fn1"/>
@@ -113,6 +118,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="hkr-qE-Ruo" id="8Ll-27-Eyz"/>
                         <outlet property="counterLabel" destination="RfA-Ch-HYt" id="HX4-3p-g2u"/>
                         <outlet property="imageView" destination="eXv-CZ-OIK" id="Xbz-JI-Y96"/>
                         <outlet property="noButton" destination="hqO-ds-Lui" id="pfz-6M-cIf"/>
