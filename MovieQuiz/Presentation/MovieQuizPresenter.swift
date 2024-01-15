@@ -15,7 +15,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     
     private weak var viewController: MovieQuizViewController?
     
-    private let alertPresenter = AlertPresenter.self
+    private lazy var alertPresenter = AlertPresenter(viewController: viewController)
     
     private var currentQuestion: QuizQuestion?
     
@@ -94,9 +94,6 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         viewController?.zeroBorderWidth()
         
         if self.isLastQuestion() {
-            let _ = correctAnswers == self.questionsAmount ?
-            "Поздравляем, вы ответили на 10 из 10!" :
-            "Вы ответили на \(correctAnswers) из \(questionsAmount), попробуйте ещё раз!"
             
             let alertModel = AlertModel(
                 title: "Этот раунд окончен!",
@@ -104,8 +101,9 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
                 buttonText: "Сыграть ещё раз") { [weak self] in
                     self?.restartQuiz()
                 }
-            let alertPresenter = AlertPresenter(viewController: viewController)
+            
             alertPresenter.showAlert(model: alertModel)
+            
         } else {
             self.switchToNextQuestion()
             questionFactory?.requestNextQuestion()
@@ -130,7 +128,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         let bestGame = statisticService.bestGame
         
         let totalPlaysCountLine = "Количество сыгранных квизов: \(statisticService.gamesCount)"
-        let currentGameResultLine = "Ваш результат: \(correctAnswers)/\(questionsAmount)"
+        let currentGameResultLine = correctAnswers == self.questionsAmount ? "Поздравляем, вы ответили на 10 из 10!" : "Ваш результат: \(correctAnswers)/\(questionsAmount)"
         let bestGameInfoLine = "Рекорд: \(bestGame.correct)/\(bestGame.total)" + " (\(bestGame.date.dateTimeString))"
         let averageAccuracyLine = "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
         
@@ -151,8 +149,8 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         guard let currentQuestion = currentQuestion else {
             return
         }
-            let givenAnswer = isYes
-            
+        let givenAnswer = isYes
+        
         proceedWithAnswer(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
 }
